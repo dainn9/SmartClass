@@ -2,6 +2,7 @@ using Backend.Common;
 using Backend.Configurations;
 using Backend.Data;
 using Backend.Interfaces;
+using Backend.Middlewares;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,14 @@ builder.Services.AddDbContext<SmartClassDbContext>(options =>
 #endregion
 
 builder.Services.AddSwaggerGen();
+
+#region Services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddHttpContextAccessor();
+#endregion
 
 #region Authentication
 builder.Services.AddAuthentication(options =>
@@ -96,6 +105,12 @@ builder.Services.Configure<JwtConfig>(
     builder.Configuration.GetSection("JwtConfig"));
 #endregion
 
+#region GoogleConfig
+builder.Services.Configure<GoogleConfig>(
+    builder.Configuration.GetSection("Authentication:Google"));
+#endregion
+
+
 #region Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -103,6 +118,10 @@ builder.Services.AddHttpContextAccessor();
 #endregion
 
 var app = builder.Build();
+
+#region Middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
