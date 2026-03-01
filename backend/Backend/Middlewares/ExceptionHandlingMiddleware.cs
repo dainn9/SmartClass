@@ -70,6 +70,11 @@ namespace Backend.Middlewares
                     message = exception.Message;
                     break;
                 //400
+                case InvalidGoogleTokenException:
+                    httpStatusCode = HttpStatusCode.BadRequest;
+                    message = exception.Message;
+                    break;
+
                 case BadRequestException badRequest:
                     httpStatusCode = HttpStatusCode.BadRequest;
                     message = exception.Message;
