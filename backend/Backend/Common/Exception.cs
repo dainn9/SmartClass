@@ -32,4 +32,14 @@
     {
         public UnauthorizedException(string message) : base(message) { }
     }
+
+    public class InvalidGoogleTokenException : Exception
+    {
+        public InvalidGoogleTokenException() { }
+
+        public InvalidGoogleTokenException(string message) : base(message) { }
+
+        public InvalidGoogleTokenException(string message, Exception innerException)
+            : base(message, innerException) { }
+    }
 }
